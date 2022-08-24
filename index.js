@@ -46,8 +46,9 @@ const school = [
 
 // * createClass function which takes argument(object) holds class name
 
-function createClass(str) {
-  return school.push({ name: str, students: [] });
+function createClass(obj) {
+  object.students = [];
+  return school.push(obj);
 }
 
 // * create student function which takes argument(object) holds class ID and the student data
@@ -59,30 +60,42 @@ function createClass(str) {
 //   }
 //  ```
 
-function createStudent(classID, studentID) {
-  return school[classID - 1].students[studentID - 1];
+function createStudent(object) {
+  const idx = school.findIndex((item) => item.name === object.class);
+  const student = object.data;
+  school[idx].students.push(student);
 }
 
 //  * create removeClass function which takes ID and remove class by ID
 
-function idDelete(classID) {
-  return delete school[classID - 1];
+function removeClass(object) {
+  const idx = school.findIndex((item) => item.name === object.name);
+
+  school.splice(idx, 1);
 }
 
 //  * create removeStudent function which takes argument(object) holds class ID and the student ID
 
-function removeStudent(classID, studentID) {
-  let thisClass = school[classID - 1];
-  let studentRemove = thisClass.students[studentID - 1];
-  delete studentRemove;
+function removeStudent(object) {
+  const idx = school.findIndex((item) => item.name === object.name);
+
+  const studentIdx = school[idx].students.findIndex(
+    (item) => item.email === object.email
+  );
+
+  school[idx].students.splice(studentIdx, 1);
 }
 
 // * create editStudent function which takes argument(object) with holds class ID and the student ID
 
-function editStudent(classID, studentID) {
-  let thisClass = school[classID - 1];
-  let studentAdding = thisClass.students[studentID - 1];
-  return studentAdding;
+function editStudent(object) {
+  const idx = school.findIndex((item) => item.name === object.name);
+  if (idx === -1) return;
+  const studentIdx = school[idx].students.findIndex(
+    (item) => item.email === object.email
+  );
+  if (studentIdx === -1) return;
+  school[idx].students[studentIdx] = { ...object.data };
 }
 
 // ```js
@@ -110,23 +123,39 @@ function editStudent(classID, studentID) {
 //   Total Classes 3, total students 4
 // ```
 
-function finalTemplate() {
-  let totalStudents = 0;
+// function finalTemplate() {
+//   let totalStudents = 0;
 
-  for (let classObj of school) {
-    totalStudents += classObj.students.length;
+//   for (let classObj of school) {
+//     totalStudents += classObj.students.length;
 
-    if (classObj.students.length === 0) {
-      console.log(`class is empty`);
-      continue;
-    }
+//     if (classObj.students.length === 0) {
+//       console.log(`class is empty`);
+//       continue;
+//     }
+//     console.log(
+//       `${classObj.name} - (class ID: ${school.indexOf(classObj) + 1})`
+//     );
+//     console.log(
+//       `Total classes ${classObj.name.length} total students ${classObj.students.length}`
+//     );
+//   }
+// }
+
+function RenderSchoolTemplate() {
+  console.log("--------------------------------------------");
+  for (let i = 0; i < school.length; i++) {
+    console.log(` ${school[i].name} -( class ID: ${i + 1}):`);
+  }
+
+  for (j = 0; j < school[j].students.length; j++) {
+    const name = school[j].students[j].name;
+    const email = school[j].students[j].email;
+    const city = school[j].students[j].city;
     console.log(
-      `${classObj.name} - (class ID: ${school.indexOf(classObj) + 1})`
-    );
-    console.log(
-      `Total classes ${classObj.name.length} total students ${classObj.students.length}`
+      `${j + 1}- ${name}, ${email}, ${city} -( student ID: ${j + 1}).`
     );
   }
 }
 
-finalTemplate();
+RenderSchoolTemplate();
